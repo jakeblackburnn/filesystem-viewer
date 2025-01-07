@@ -2,7 +2,7 @@
 
 by J. Blackburn
 
-Last Updated: Jan 2 2024 (**WIP**)
+Last Updated: Jan 7 2024 (**WIP**)
 
 Shows content of text files within a directory. Uses node to serve content via a local web server.
 Intended for quick and easy access to text files anywhere in the local filesystem. 
