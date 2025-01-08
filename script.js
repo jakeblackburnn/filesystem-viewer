@@ -31,4 +31,4 @@ function loadFileContentIntoElement(filepath, elementId) {
 
 
 
-loadFileContentIntoElement('/file.txt', 'root');
+loadFileContentIntoElement('/file.txt', 'content');
