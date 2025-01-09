@@ -2,6 +2,27 @@
 // Created by J. Blackburn - Dec 19 2024
 //
 
+function loadFileMap() {
+
+	const fileMapElement = document.getElementById('file-map');
+
+	fetch('/file-map')
+		.then(response => response.json()) // convert to json
+		.then(files => {
+			fileMapElement.innerHTML = ''; // clear map contents
+			files.forEach(file => {
+
+					// create list item for each file
+				const li = document.createElement('li');
+				li.textContent = file;
+				li.addEventListener('click', () => loadFileContentIntoElement(file, 'content'));
+				fileMapElement.appendChild(li);
+
+                    });
+
+		});
+}
+
 function loadFileContentIntoElement(filepath, elementId) {
 
 	fetch(filepath).then(response => {
@@ -23,12 +44,13 @@ function loadFileContentIntoElement(filepath, elementId) {
 	  .catch(error => {         // or load error message instead
 
 	    console.error('Error fetching the file:', error);
-	    document.getElementById('root').textContent = 'Error loading file content';
+	    document.getElementById(elementId).textContent = 'Error loading file content';
 
 	  });
 }
 
 
 
+loadFileMap();
 
 loadFileContentIntoElement('/file.txt', 'content');
