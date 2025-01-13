@@ -2,7 +2,7 @@
 
 by J. Blackburn
 
-Last Updated: Jan 8 2024 (**WIP**)
+Last Updated: Jan 13 2025 (**WIP**)
 
 Shows content of text files within a directory. Uses node to serve content via a local web server.
 Intended for quick and easy access to text files anywhere in the local filesystem. 
@@ -20,6 +20,10 @@ Example use case: viewing code from a distant project without mucking up one's t
    ```bash
    cd filesystem-viewer
    ```
+3. For development, install nodemon:
+    ```bash
+    npm install
+    ```
 
 ---
 
@@ -28,6 +32,11 @@ Example use case: viewing code from a distant project without mucking up one's t
 start the server locally (requires node):
 ``` bash
 node server.js
+```
+
+for development, use the dev script to see changes in real time (requires nodemon):
+``` bash
+npm dev
 ```
 
 ---
