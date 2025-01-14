@@ -50,6 +50,7 @@ const server = http.createServer( (req, res) => {
 		const mime_types = {                         
 			'.html': 'text/html',
 			'.js':   'application/javascript',
+			'.css':  'text/css',
 			'.txt':  'text/plain',
 			'':      'text/plain', 
 		};
