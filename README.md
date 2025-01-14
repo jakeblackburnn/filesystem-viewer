@@ -36,7 +36,7 @@ node server.js
 
 for development, use the dev script to see changes in real time (requires nodemon):
 ``` bash
-npm dev
+npm run dev
 ```
 
 ---
