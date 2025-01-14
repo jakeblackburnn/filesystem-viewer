@@ -1,6 +1,59 @@
 /* Created by J. Blackburn - Jan 13 2025 */
 
-body {
-
+html {
+  margin: 0;
 }
+
+body {
+  font-family: Arial, sans-serif;
+  color: black;
+  background: white;
+  margin: 0;
+}
+
+header {
+  background: black;
+  color: rgb(200, 150, 255);
+ 
+  h1 {
+    padding: 30px;
+    margin: 0;
+  }
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1);
+  
+}
+
+main ul {
+  margin: 0;
+  padding: 5% 20px;
+  width: 15%;
+  height: 90%;
+
+  list-style: none;
+  text-decoration: underline;
+  color: rgb(100, 100, 255);
+  background: rgba(0, 0, 0, 0.1);
+
+  li {
+    margin: 5px;
+    padding-left: 5px;
+  }
+}
+
+main div {
+  padding: 5% 20px;
+  width: 85%;
+  height: 90%;
+
+  p {
+    margin: 0;
+  } 
+} 
 
