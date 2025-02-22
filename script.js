@@ -6,7 +6,7 @@ function loadFileMap() {
 
 	const fileMapElement = document.getElementById('file-map');
 
-	fetch('/file-map')
+	fetch('/fs')
 		.then(response => response.json()) // convert to json
 		.then(files => {
 			fileMapElement.innerHTML = ''; // clear map contents
@@ -14,8 +14,11 @@ function loadFileMap() {
 
 					// create list item for each file
 				const li = document.createElement('li');
-				li.textContent = file;
-				li.addEventListener('click', () => loadFileContentIntoElement(file, 'content'));
+				li.textContent = file
+
+				const filepath = 'fs/' + file
+
+				li.addEventListener('click', () => loadFileContentIntoElement(filepath, 'content'));
 				fileMapElement.appendChild(li);
 
                     });
@@ -24,6 +27,8 @@ function loadFileMap() {
 }
 
 function loadFileContentIntoElement(filepath, elementId) {
+
+	console.log('requesting filepath: ' + filepath);
 
 	fetch(filepath).then(response => {
 
@@ -52,5 +57,3 @@ function loadFileContentIntoElement(filepath, elementId) {
 
 
 loadFileMap();
-
-loadFileContentIntoElement('/file.txt', 'content');

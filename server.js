@@ -9,14 +9,41 @@ const path = require( 'path' );
 const fs   = require( 'fs'   );
 
 
+	// path to index.html
+const htmlPath    = path.join(__dirname, 'index.html')
+const cssPath     = path.join(__dirname, 'styles.css')
+const scriptPath  = path.join(__dirname, 'script.js')
+
+const rootPath   = process.argv[2]
 
 const server = http.createServer( (req, res) => {
 
-		// serve list of files 
 	
-	if (req.url === '/file-map') {
+		// serve index
+	if (req.url === '/') {
+		
+		fs.readFile(htmlPath, (err, data) => {
 
-		fs.readdir(__dirname, (err, content) => {
+			if (err) {
+
+			  res.writeHead(404, { 'Content-Type': 'text/plain' } );
+			  res.end('could not find index.html');
+
+			} else {
+
+		  	  res.writeHead(200, { 'Content-Type': 'text/html' });
+			  res.end(data);
+
+			}
+		});
+	
+		// serve filesystem topology
+		// TODO: recursively get all text files, skip directories
+	} else if (req.url === '/fs') {
+
+		console.log('filemap requested, establishing connection... completing the transfer...')
+
+		fs.readdir(rootPath, (err, content) => {
 
 				// handle errors
 			if (err) {
@@ -32,20 +59,17 @@ const server = http.createServer( (req, res) => {
 				// TODO: handle directories
 
 				// send list of files as json
-			res.writeHead(200, { 'Content-Type': 'application/json' });
+			res.writeHead(200, { 'Content-Type': 'application/json' })
 			res.end( JSON.stringify(files) );
 		})
-
-		// serve files
 		
 	} else {
 
-			// if file requested, get the file name
-			// else serve index.html
-		const file_name = req.url === '/' ?   'index.html'  :  req.url;
+		var filename = req.url                          // served file is url by default
+		var filepath = path.join(__dirname, filename);  // path is server directory by default
 
-		const extension = path.extname( file_name ); // file extension
-
+			// determine content type
+		const extension = path.extname( filename ) // file extension
 			// map extension to content type
 		const mime_types = {                         
 			'.html': 'text/html',
@@ -56,17 +80,21 @@ const server = http.createServer( (req, res) => {
 		};
 
 		var content_type = mime_types[ extension ]; 
-		
-			// if content type is undefined, default to plain text
 		content_type = content_type === undefined ? 'text/plain' : content_type;
 
 
 
-			// serve the file
+		const match = req.url.match(/^\/fs\/(.+)$/) // if file matches /fs/<filename>, serve content from filesystem
 
-		const file_path = path.join(__dirname, file_name);
-			
-		fs.readFile(file_path, (err, data) => {
+
+			// if url matches fs path, change filepath to provided fs root directory
+		if (match) { 
+			filename = match[1]
+			filepath = path.join(rootPath, filename)
+		} 
+		
+			// serve the file
+		fs.readFile(filepath, (err, data) => {
 
 			if (err) {
 
@@ -80,7 +108,7 @@ const server = http.createServer( (req, res) => {
 
 			}
 		});
-	} 
+	}
 });
 
 
