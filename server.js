@@ -10,9 +10,12 @@ const fs   = require( 'fs'   );
 
 
 	// path to index.html
-const htmlPath    = path.join(__dirname, 'index.html')
-const cssPath     = path.join(__dirname, 'styles.css')
-const scriptPath  = path.join(__dirname, 'script.js')
+
+const TopologyViewPath = path.join(__dirname, 'topology.html')
+const FileViewPath     = path.join(__dirname, 'file.html')
+
+const cssPath          = path.join(__dirname, 'styles.css')
+const scriptPath       = path.join(__dirname, 'script.js')
 
 const rootPath   = process.argv[2]
 
@@ -22,7 +25,7 @@ const server = http.createServer( (req, res) => {
 		// serve index
 	if (req.url === '/') {
 		
-		fs.readFile(htmlPath, (err, data) => {
+		fs.readFile(TopologyViewPath, (err, data) => {
 
 			if (err) {
 
@@ -62,14 +65,61 @@ const server = http.createServer( (req, res) => {
 			res.writeHead(200, { 'Content-Type': 'application/json' })
 			res.end( JSON.stringify(files) );
 		})
+
+	} else if ( req.url.match(/^\/fs\/(.+)$/) ) {
+
+		const match = req.url.match(/^\/fs\/(.+)$/) // if file matches /fs/<filename>, serve content from filesystem
+
+		fileName = match[1]
+		filePath = path.join(rootPath, fileName)
+
+			// try to read the file contents
+		
+		fs.readFile(filePath, 'utf8', (err, fileData) => {
+
+			if (err) {
+				res.writeHead(404, { 'Content-Type': 'text/plain' });
+				res.end('404 - file not found');
+			} else {
+
+					// try to get the file view html
+
+				fs.readFile(FileViewPath, (err, templateData) => {
+
+					if (err) {
+						res.writeHead(500, { 'Content-Type': 'text/plain' });
+						res.end('500 - error loading file view template');
+					} else {
+						
+							// insert file contents to file view html
+
+						const startTag = '<div class="file">';
+						const endTag = '</div>';
+
+						const startIndex = templateData.indexOf(startTag);
+						const endIndex = templateData.indexOf(endTag, startIndex);
+
+						const outputHtml = 
+							templateData.slice(0, startIndex + startTag.length) +
+							`<pre>${fileData}</pre>` +
+							templateData.slice(endIndex);
+
+						res.writeHead(200, { 'Content-Type': 'text/html' });
+						res.end(outputHtml);
+					}
+				});
+			}
+});
 		
 	} else {
 
 		var filename = req.url                          // served file is url by default
 		var filepath = path.join(__dirname, filename);  // path is server directory by default
 
+
 			// determine content type
 		const extension = path.extname( filename ) // file extension
+
 			// map extension to content type
 		const mime_types = {                         
 			'.html': 'text/html',
@@ -79,19 +129,12 @@ const server = http.createServer( (req, res) => {
 			'':      'text/plain', 
 		};
 
+
 		var content_type = mime_types[ extension ]; 
 		content_type = content_type === undefined ? 'text/plain' : content_type;
 
 
 
-		const match = req.url.match(/^\/fs\/(.+)$/) // if file matches /fs/<filename>, serve content from filesystem
-
-
-			// if url matches fs path, change filepath to provided fs root directory
-		if (match) { 
-			filename = match[1]
-			filepath = path.join(rootPath, filename)
-		} 
 		
 			// serve the file
 		fs.readFile(filepath, (err, data) => {
@@ -108,8 +151,12 @@ const server = http.createServer( (req, res) => {
 
 			}
 		});
+
+
+
 	}
-});
+
+}); // end http server
 
 
 
