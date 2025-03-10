@@ -17,7 +17,7 @@ const FileViewPath     = path.join(__dirname, 'file.html')
 const cssPath          = path.join(__dirname, 'styles.css')
 const scriptPath       = path.join(__dirname, 'script.js')
 
-const rootPath   = process.argv[2]
+const fsPath   = process.argv[2]
 
 const server = http.createServer( (req, res) => {
 
@@ -46,7 +46,7 @@ const server = http.createServer( (req, res) => {
 
 		console.log('filemap requested, establishing connection... completing the transfer...')
 
-		fs.readdir(rootPath, (err, content) => {
+		fs.readdir(fsPath, (err, content) => {
 
 				// handle errors
 			if (err) {
@@ -71,7 +71,7 @@ const server = http.createServer( (req, res) => {
 		const match = req.url.match(/^\/fs\/(.+)$/) // if file matches /fs/<filename>, serve content from filesystem
 
 		fileName = match[1]
-		filePath = path.join(rootPath, fileName)
+		filePath = path.join(fsPath, fileName)
 
 			// try to read the file contents
 		
