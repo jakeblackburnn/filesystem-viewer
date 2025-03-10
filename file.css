@@ -1,0 +1,35 @@
+
+/* Created by J. Blackburn - Mar 10 2025 */
+
+body { 
+    font-size: 1.1rem;
+    color: white;
+    background-color: black;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    background-color: navy;
+
+    h1 {
+	font-size: 1.1rem;
+	padding: 8px;
+	margin: 0;
+	color: hotpink;
+    }
+
+    ul {
+	margin:0;
+	list-style: none;	
+
+	a {
+	    color: hotpink;
+	}
+
+	a:hover {
+	    color: magenta;
+	}
+    }
+}
