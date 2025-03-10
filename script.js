@@ -12,48 +12,19 @@ function loadFileMap() {
 			fileMapElement.innerHTML = ''; // clear map contents
 			files.forEach(file => {
 
-					// create list item for each file
-				const li = document.createElement('li');
-				li.textContent = file
+				const a = document.createElement('a');
+				a.textContent = file;
 
 				const filepath = 'fs/' + file
+				a.href = filepath;
 
-				li.addEventListener('click', () => loadFileContentIntoElement(filepath, 'content'));
+				const li = document.createElement('li');
+				li.appendChild(a);
+
 				fileMapElement.appendChild(li);
-
                     });
 
 		});
 }
-
-function loadFileContentIntoElement(filepath, elementId) {
-
-	console.log('requesting filepath: ' + filepath);
-
-	fetch(filepath).then(response => {
-
-	    if (!response.ok) {     // check that file is served correctly
-
-	      throw new Error('Network response was not ok');
-	    }
-
-
-	    return response.text(); // Convert the response to text
-
-	  }).then(data => {         // then load the text into element
-
-	    document.getElementById(elementId).textContent = data;
-
-	  })
-
-	  .catch(error => {         // or load error message instead
-
-	    console.error('Error fetching the file:', error);
-	    document.getElementById(elementId).textContent = 'Error loading file content';
-
-	  });
-}
-
-
 
 loadFileMap();
