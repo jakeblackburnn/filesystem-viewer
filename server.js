@@ -9,7 +9,42 @@ const path = require( 'path' );
 const fs   = require( 'fs'   );
 
 
-	// path to index.html
+function getFilesystemTree(dir) {
+	let fsTree = []; // start w/ empty array
+
+		// get filesystem contents
+	const entries = fs.readdirSync(dir).filter( file => file.charAt(0) !== '.'); // filter out hidden files
+
+	entries.forEach( entry => {
+		
+			// get file path & type
+		const fullPath = path.join(dir, entry);
+		const fileType = fs.statSync(fullPath);
+
+		if ( fileType.isDirectory() ) {
+				// push sub tree object
+			fsTree.push({
+				name: entry,
+				type: 'dir',
+				children: getFileSystemTree(fullPath)
+			});
+
+		} else {
+				// push file object
+			fsTree.push({
+				name: entry,
+				type: 'file'
+			});
+		}
+
+	}); // end for each
+	
+	return fsTree;
+}
+
+
+
+
 
 const TopologyViewPath = path.join(__dirname, 'topology.html')
 const FileViewPath     = path.join(__dirname, 'file.html')
