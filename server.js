@@ -26,7 +26,7 @@ function getFilesystemTree(dir) {
 			fsTree.push({
 				name: entry,
 				type: 'dir',
-				children: getFileSystemTree(fullPath)
+				children: getFilesystemTree(fullPath)
 			});
 
 		} else {
@@ -41,6 +41,9 @@ function getFilesystemTree(dir) {
 	
 	return fsTree;
 }
+
+
+//console.log( getFilesystemTree('../image-editor'));
 
 
 
@@ -79,27 +82,21 @@ const server = http.createServer( (req, res) => {
 		// TODO: recursively get all text files, skip directories
 	} else if (req.url === '/fs') {
 
-		console.log('filemap requested, establishing connection... completing the transfer...')
+		console.log('filesystem tree requested, establishing connection... completing the transfer...')
 
-		fs.readdir(fsPath, (err, content) => {
+		try {
+			const fsTree = getFilesystemTree(fsPath);
 
-				// handle errors
-			if (err) {
-				console.error( 'something went wrong reading directory' );
-				res.writeHead(500, { 'Content-Type': 'text/plain' });
-				res.end('error reading directory');
-				return;
-			}
+			res.writeHead(200, { 'Content-Type': 'application/json' });
+			res.end( JSON.stringify(fsTree) );
 
-				// remove hidden files from directory contents
-			const files = content.filter( (file) => file.charAt(0) != '.' )
+		} catch (err) {
+			console.error('error reading filesystem');
+			res.writeHead(500, { 'Content-Type': 'text/plain' });
+			res.end('error reading filesystem');
+		}
 
-				// TODO: handle directories
 
-				// send list of files as json
-			res.writeHead(200, { 'Content-Type': 'application/json' })
-			res.end( JSON.stringify(files) );
-		})
 
 	} else if ( req.url.match(/^\/fs\/(.+)$/) ) {
 
